@@ -1,0 +1,9 @@
+# syntax=docker/dockerfile:1
+# 复核镜像：投影规则测试 → 前端构建 → 对健康地址与演练结果做 HTTP 冒烟，以退出码结束
+
+FROM node:20-alpine
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY . .
+CMD ["sh", "-c", "npm run test && npm run build && node verify/smoke.mjs"]
